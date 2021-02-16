@@ -32,7 +32,7 @@
           <a-button @click="getVal('6')">6</a-button>
         </a-col>
         <a-col :span="6">
-          <a-button @click="sub('-')">-</a-button>
+          <a-button @click="subtraction('-')">-</a-button>
         </a-col>
       </a-row>  
       <a-row class="mb10">
@@ -46,7 +46,7 @@
           <a-button @click="getVal('3')">3</a-button>
         </a-col>
         <a-col :span="6">
-          <a-button @click="add('+')">+</a-button>
+          <a-button @click="addition('+')">+</a-button>
         </a-col>
       </a-row>  
       <a-row>
@@ -57,7 +57,7 @@
           <a-button @click="getVal('.')">.</a-button>
         </a-col>
         <a-col :span="6">
-          <a-button @click="cheng('*')">*</a-button>
+          <a-button @click="multiplication('*')">*</a-button>
         </a-col>
         <a-col :span="6">
           <a-button @click="resultVal()">=</a-button>
@@ -81,35 +81,38 @@ export default {
     }
   },
   methods: {
+    // 获取键值
     getVal(item){
       this.newVal += item
       this.result = this.result == 0 ? +this.newVal : this.newVal
     },
+    // 清除 归零
     clearVal(){
       this.result = 0
       this.newVal = 0
     },
-    sub(item){
-      // console.log("jian  ",this.newVal);
-      // console.log("jian  ",this.result);
-      
+    // 减法
+    subtraction(item){
       this.newVal = this.result + item
       this.result = this.newVal
     },
-    cheng(item){
+    // 乘法
+    multiplication(item){
       this.newVal = this.result + item
       this.result = this.newVal
     },
-
-    add(item){
+    // 加法
+    addition(item){
       this.newVal = this.result + item
       this.result = this.newVal
     },
+    // 返回结果
     resultVal(){
-      this.newVal = this.result.split('-')
-      // this.result = +this.newVal
-      // console.log(this.newVal);
-      this.result =  this.newVal[0] - this.newVal[1]
+      if (this.newVal.includes('+') || this.newVal.includes('-') || this.newVal.includes('*') || this.newVal.includes('/')) {
+        this.result = eval(this.newVal)
+      } else {
+        this.result = +this.result
+      }
     }
   }
 }
