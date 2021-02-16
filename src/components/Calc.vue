@@ -4,7 +4,7 @@
     <div>
       <a-row class="mb10">
         <a-col >
-          <a-input v-model="result" placeholder="请输入值" style="text-align:right"/>
+          <a-input v-model="result" placeholder="请输入值" readonly style="text-align:right"/>
         </a-col>
       </a-row>  
       <a-row class="mb10">
@@ -18,7 +18,7 @@
           <a-button @click="getVal('9')">9</a-button>
         </a-col>
         <a-col :span="6">
-          <a-button @click="clearVal()">CE</a-button>
+          <a-button @click="clearVal()">Clear</a-button>
         </a-col>
       </a-row>  
       <a-row class="mb10">
@@ -49,7 +49,7 @@
           <a-button @click="addition('+')">+</a-button>
         </a-col>
       </a-row>  
-      <a-row>
+      <a-row class="mb10">
         <a-col :span="6">
           <a-button @click="getVal('0')">0</a-button>
         </a-col>
@@ -61,6 +61,20 @@
         </a-col>
         <a-col :span="6">
           <a-button @click="resultVal()">=</a-button>
+        </a-col>
+      </a-row>  
+      <a-row class="mb10">
+        <a-col :span="6">
+          <a-button @click="divisionOperate('÷')">÷</a-button>
+        </a-col>
+        <a-col :span="6">
+          <a-button @click="squareOperate()">x<sup>2</sup></a-button>
+        </a-col>
+        <a-col :span="6">
+          <a-button @click="modOperate('%')">%</a-button>
+        </a-col>
+        <a-col :span="6">
+          <a-button @click="back()">回退</a-button>
         </a-col>
       </a-row>  
     </div>
@@ -75,9 +89,9 @@ export default {
   },
   data(){
     return {
-      result: 0,
-      newVal: 0,
-      val: 0
+      result: '',
+      newVal: '',
+      val: ''
     }
   },
   methods: {
@@ -88,8 +102,8 @@ export default {
     },
     // 清除 归零
     clearVal(){
-      this.result = 0
-      this.newVal = 0
+      this.result = ''
+      this.newVal = ''
     },
     // 减法
     subtraction(item){
@@ -101,15 +115,43 @@ export default {
       this.newVal = this.result + item
       this.result = this.newVal
     },
+    // 除法
+    divisionOperate(item){
+      this.newVal = this.result + item
+      this.result = this.newVal
+    },
     // 加法
     addition(item){
       this.newVal = this.result + item
       this.result = this.newVal
     },
+    // 取模
+    modOperate(item) {
+      this.newVal = this.result + item
+      this.result = this.newVal
+    },
+    // 平方
+    squareOperate() {
+      this.result = Math.pow(eval(+this.result),2)
+    },
+    // 退格
+    back() {
+      let arr = this.result.length > 0 ? this.result.split('') : []
+      if (arr.length > 0) {
+        arr.splice(arr.length-1,1)
+        this.newVal = arr.toString().replaceAll(',','')
+        this.result = this.newVal
+      } else if (+this.result !== 0) {
+        // 处理个位数退格问题
+        this.result = ''
+        this.newVal = ''
+        
+      }
+    },
     // 返回结果
     resultVal(){
-      if (this.newVal.includes('+') || this.newVal.includes('-') || this.newVal.includes('*') || this.newVal.includes('/')) {
-        this.result = eval(this.newVal)
+      if (this.newVal.includes('+') || this.newVal.includes('-') || this.newVal.includes('*') || this.newVal.includes('÷') || this.newVal.includes('%')) {
+        this.result = eval(this.newVal.replace('÷', '/'))
       } else {
         this.result = +this.result
       }
@@ -120,8 +162,9 @@ export default {
 
 <style scoped>
 .wrapper {
-  width: 20vw;
-  height: 50vh;
+  width: 340px;
+  height: 300px;
+  padding: 10px;
   margin: 6vh auto;
   border: 1px solid #ccc;
   background-color: rgb(80, 202, 43);
